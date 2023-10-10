@@ -1,0 +1,11 @@
+PatientID,Name,Age,Gender,Disease,DoctorID
+1,Robert Smith,45,Male,Hypertension,3
+2,Emily Johnson,32,Female,Asthma,3
+3,Michael Brown,50,Male,Diabetes,3
+4,Sarah Davis,28,Female,Migraine,3
+5,James Miller,40,Male,Cardiomyopathy,3
+6,Jessica White,35,Female,Arthritis,4
+7,David Taylor,55,Male,Parkinson’s Disease,4
+8,Sophia Moore,60,Female,Glaucoma,4
+9,John Lee,48,Male,Depression,4
+10,Olivia Martin,22,Female,Anemia,4
