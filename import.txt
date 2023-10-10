@@ -1,0 +1,83 @@
+Cypher Script for Node creation according to the previous entity: 
+LOAD CSV WITH HEADERS FROM 'file:///EmergencyDept.csv' AS row 
+CREATE (e:EmergencyDept { 
+    CaseID: toInteger(row.CaseID), 
+    PatientID: toInteger(row.PatientID), 
+    DoctorID: toInteger(row.DoctorID), 
+    EquipmentID: toInteger(row.EquipmentID), 
+    InvoiceNum: toInteger(row.InvoiceNum), 
+    DrugNumber: toInteger(row.DrugNumber), 
+    NurseID: toInteger(row.NurseID) 
+}) 
+
+LOAD CSV WITH HEADERS FROM 'file:///Equipment.csv' AS row 
+CREATE (e:Equipment { 
+    EquipmentID: toInteger(row.EquipmentID),  
+    EquipmentName: row.EquipmentName 
+}) 
+
+LOAD CSV WITH HEADERS FROM 'file:///Invoice.csv' AS row 
+CREATE (i:Invoice { 
+    InvoiceNum: toInteger(row.InvoiceNum),  
+    ReceiptID: row.ReceiptID, 
+    InvoiceDate: date(row.InvoiceDate) 
+}) 
+
+LOAD CSV WITH HEADERS FROM 'file:///Medicine.csv' AS row 
+CREATE (m:Medicine { 
+    DrugNumber: toInteger(row.DrugNumber),  
+    DrugName: row.DrugName, 
+    Quantity: toInteger(row.Quantity), 
+    Price: toFloat(row.Price) 
+}) 
+
+LOAD CSV WITH HEADERS FROM 'file:///Nurse.csv' AS row 
+CREATE (n:Nurse { 
+    NurseID: toInteger(row.NurseID),  
+    FirstName: row.FirstName,  
+    LastName: row.LastName 
+}) 
+
+LOAD CSV WITH HEADERS FROM 'file:///Patient.csv' AS row 
+CREATE (p:Patient { 
+    PatientID: toInteger(row.PatientID),  
+    Name: row.Name,  
+    Age: toInteger(row.Age), 
+    Gender: row.Gender, 
+    Disease: row.Disease 
+}) 
+
+LOAD CSV WITH HEADERS FROM 'file:///Doctor.csv' AS row 
+CREATE (d:Doctor { 
+    DoctorID: toInteger(row.DoctorID),  
+    FirstName: row.FirstName,  
+    LastName: row.LastName,  
+    Speciality: row.Speciality 
+}) 
+
+ 
+Relationship among Nodes: 
+
+MATCH (ed:EmergencyDept), (d:Doctor) 
+WHERE ed.DoctorID = d.DoctorID 
+CREATE (ed)-[:ASSIGNED_TO]->(d);
+ 
+MATCH (d:Doctor), (p:Patient) 
+WHERE d.DoctorID = p.DoctorID 
+CREATE (d)-[:TREATS]->(p); 
+
+MATCH (ed:EmergencyDept), (n:Nurse) 
+WHERE ed.NurseID = n.NurseID 
+CREATE (ed)-[:ASSIGNED_TO]->(n); 
+
+MATCH (ed:EmergencyDept), (e:Equipment) 
+WHERE ed.EquipmentID = e.EquipmentID 
+CREATE (ed)-[:USES_EQUIPMENT]->(e); 
+
+MATCH (ed:EmergencyDept), (m:Medicine) 
+WHERE ed.DrugNumber = m.DrugNumber 
+CREATE (ed)-[:ADMINISTERS_MEDICINE]->(m); 
+
+MATCH (ed:EmergencyDept), (i:Invoice) 
+WHERE ed.InvoiceNum = i.InvoiceNum 
+CREATE (ed)-[:GENERATES_INVOICE]->(i); 

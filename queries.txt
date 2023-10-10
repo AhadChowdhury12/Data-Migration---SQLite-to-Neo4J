@@ -1,0 +1,28 @@
+Query - 1:
+MATCH (d:Doctor)-[:HAS_PATIENT]->(p:Patient)
+WHERE d.DoctorID = 4
+RETURN d.FirstName AS Doctor_FirstName, 
+       d.LastName AS Doctor_LastName, 
+       p.PatientID AS Patient_ID, 
+       p.Name AS Patient_Name, 
+       p.Disease AS Diagnosed_Disease
+ORDER BY p.PatientID;
+Query - 2:
+MATCH (ed:EmergencyDept)-[:ASSIGNED_TO]->(d:Doctor)
+RETURN ed.CaseID AS EmergencyDept_CaseID, 
+       d.DoctorID AS Doctor_ID, 
+       d.FirstName AS Doctor_FirstName, 
+       d.LastName AS Doctor_LastName, 
+       d.Speciality AS Doctor_Speciality
+ORDER BY ed.CaseID, d.DoctorID;
+Query - 3:
+MATCH (n:Nurse)<-[:ASSIGNED_TO]-(ed:EmergencyDept)
+WITH n, COUNT(ed) as caseCount
+RETURN n.FirstName, n.LastName, caseCount
+ORDER BY caseCount DESC;
+Query - 4:
+MATCH (ed:EmergencyDept)-[:ASSIGNED_TO]->(d:Doctor)-[:HAS_PATIENT]->(p:Patient)
+RETURN ed.CaseID AS EmergencyDept_CaseID, 
+       d.DoctorID AS Doctor_ID, d.FirstName AS Doctor_FirstName, d.LastName AS Doctor_LastName,
+       p.PatientID AS Patient_ID, p.Name AS Patient_Name, p.Disease AS Patient_Disease
+ORDER BY ed.CaseID, d.DoctorID, p.PatientID;
